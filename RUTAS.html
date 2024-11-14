@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario con Geolocalización</title>
+  <script>
+    function capturarUbicacion() {
+      // Obtener y almacenar la hora actual en el formulario
+     var fecha = new Date();
+      var fechaLocal = fecha.getFullYear() + "-" +
+                       ("0" + (fecha.getMonth() + 1)).slice(-2) + "-" +
+                       ("0" + fecha.getDate()).slice(-2) + " " +
+                       ("0" + fecha.getHours()).slice(-2) + ":" +
+                       ("0" + fecha.getMinutes()).slice(-2) + ":" +
+                       ("0" + fecha.getSeconds()).slice(-2);
+      document.getElementById("hora_envio").value = fechaLocal;
+      
+      // Obtener la ubicación geográfica del usuario
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          document.getElementById("latitud").value = position.coords.latitude;
+          document.getElementById("longitud").value = position.coords.longitude;
+        }, function(error) {
+          alert("No se pudo obtener la ubicación: " + error.message);
+        });
+      } else {
+        alert("La geolocalización no está disponible en este navegador.");
+      }
+    }
+  </script>
+</head>
+<body onload="capturarUbicacion()">
+
+  <h2>Formulario con Geolocalización</h2>
+  
+  <form action="https://script.google.com/macros/s/AKfycbwvQEseGwh8zkTTCy4aT1SQH2IX7HH3GnED7erQTQmQTarAhd6TakBI8W5_h1Duo9rN/exec" method="POST" onsubmit="capturarUbicacion()">
+    <label for="vehiculo1">
+      <input type="radio" id="vehiculo1" name="vehiculo" value="Vehículo 1" required>
+      Vehículo 1
+    </label><br><br>
+    
+    <label for="vehiculo2">
+      <input type="radio" id="vehiculo2" name="vehiculo" value="Vehículo 2">
+      Vehículo 2
+    </label><br><br>
+    
+    <!-- Campos ocultos para almacenar la hora y la ubicación -->
+    <input type="hidden" id="hora_envio" name="hora_envio">
+    <input type="hidden" id="latitud" name="latitud">
+    <input type="hidden" id="longitud" name="longitud">
+    
+    <button type="submit">Enviar</button>
+  </form>
+
+</body>
+</html>
